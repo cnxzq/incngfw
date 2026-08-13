@@ -35,6 +35,16 @@ CommonJS：
 const { detectGfw, isInGfw } = require('incngfw');
 ```
 
+### 检查 GitHub Raw
+
+```js
+import { isGithubRawAccessible } from 'incngfw';
+
+const accessible = await isGithubRawAccessible();
+```
+
+该方法专门检查 `https://raw.githubusercontent.com/` 是否可访问，返回 `boolean`。默认超时和缓存时间均为 `1000ms`，可传入 `{ timeout, cacheTtl }` 覆盖；相同配置的并发调用会共享同一次检查。
+
 ### 自定义检测
 
 ```js

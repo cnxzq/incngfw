@@ -35,6 +35,16 @@ CommonJS:
 const { detectGfw, isInGfw } = require('incngfw');
 ```
 
+### Check GitHub Raw
+
+```js
+import { isGithubRawAccessible } from 'incngfw';
+
+const accessible = await isGithubRawAccessible();
+```
+
+This method checks whether `https://raw.githubusercontent.com/` is reachable and returns a `boolean`. Its timeout and cache lifetime both default to `1000ms` and can be overridden with `{ timeout, cacheTtl }`. Concurrent calls with identical options share one check.
+
 ### Custom probes
 
 ```js

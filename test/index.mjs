@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
+import { EventEmitter } from 'node:events';
 import http from 'node:http';
+import https from 'node:https';
 import { setTimeout as delay } from 'node:timers/promises';
 
 import * as esm from '../lib/index.js';
@@ -11,6 +13,7 @@ const cjs = require('../lib/index.cjs');
 
 assert.equal(esm.detectGfw, cjs.detectGfw);
 assert.equal(esm.isInGfw, cjs.isInGfw);
+assert.equal(esm.isGithubRawAccessible, cjs.isGithubRawAccessible);
 
 let requestCount = 0;
 const server = http.createServer((request, response) => {
@@ -86,6 +89,53 @@ try {
   assert.throws(() => esm.detectGfw({ blocked: ['file:///tmp/x'], domestic: [reachable] }), /HTTP/);
   assert.throws(() => esm.detectGfw({ blocked: [reachable], domestic: [reachable], timeout: 0 }), /timeout/);
   assert.throws(() => esm.detectGfw({ blocked: [reachable], domestic: [reachable], cacheTtl: -1 }), /cacheTtl/);
+  assert.throws(() => esm.isGithubRawAccessible({ timeout: 0 }), /timeout/);
+  assert.throws(() => esm.isGithubRawAccessible({ cacheTtl: -1 }), /cacheTtl/);
+
+  const originalHttpsRequest = https.request;
+  let githubRawRequests = 0;
+  try {
+    https.request = (url, options, callback) => {
+      githubRawRequests += 1;
+      assert.equal(url, 'https://raw.githubusercontent.com/');
+      assert.equal(options.method, 'HEAD');
+      const request = new EventEmitter();
+      request.setTimeout = () => request;
+      request.end = () => {
+        setImmediate(() => callback({ statusCode: 301, resume() {} }));
+      };
+      request.destroy = () => {};
+      return request;
+    };
+    const githubOptions = { timeout: 91, cacheTtl: 50 };
+    const githubConcurrent = await Promise.all([
+      esm.isGithubRawAccessible(githubOptions),
+      esm.isGithubRawAccessible(githubOptions),
+    ]);
+    assert.deepEqual(githubConcurrent, [true, true]);
+    assert.equal(githubRawRequests, 1);
+    assert.equal(await esm.isGithubRawAccessible(githubOptions), true);
+    assert.equal(githubRawRequests, 1);
+    await delay(60);
+    assert.equal(await esm.isGithubRawAccessible(githubOptions), true);
+    assert.equal(githubRawRequests, 2);
+
+    https.request = () => {
+      githubRawRequests += 1;
+      const request = new EventEmitter();
+      request.setTimeout = () => request;
+      request.end = () => setImmediate(() => {
+        const error = new Error('unreachable');
+        error.code = 'ENOTFOUND';
+        request.emit('error', error);
+      });
+      request.destroy = () => {};
+      return request;
+    };
+    assert.equal(await esm.isGithubRawAccessible({ timeout: 92, cacheTtl: 0 }), false);
+  } finally {
+    https.request = originalHttpsRequest;
+  }
 
   async function runCli(args) {
     return new Promise((resolve, reject) => {
