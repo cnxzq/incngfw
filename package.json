@@ -1,0 +1,54 @@
+{
+  "name": "ingfw",
+  "version": "0.1.0",
+  "description": "Detect whether the current network environment is inside the GFW.",
+  "type": "module",
+  "main": "./lib/index.cjs",
+  "module": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/index.d.ts",
+        "default": "./lib/index.js"
+      },
+      "require": {
+        "types": "./lib/index.d.cts",
+        "default": "./lib/index.cjs"
+      }
+    }
+  },
+  "bin": {
+    "ingfw": "./bin/ingfw.cjs"
+  },
+  "files": [
+    "bin",
+    "docs",
+    "lib"
+  ],
+  "engines": {
+    "node": ">=16"
+  },
+  "scripts": {
+    "test": "node ./test/index.mjs",
+    "prepublishOnly": "npm test"
+  },
+  "keywords": [
+    "gfw",
+    "great-firewall",
+    "china",
+    "mainland-china",
+    "prc",
+    "location",
+    "firewall",
+    "network",
+    "network-detection",
+    "cli",
+    "中国",
+    "中国大陆",
+    "防火墙",
+    "网络检测",
+    "网络环境"
+  ],
+  "license": "MIT"
+}

@@ -1,0 +1,75 @@
+# ingfw
+
+English | [简体中文](../README.md)
+
+Detect whether the effective Node.js network exit is inside the GFW. Supports ESM, CommonJS, TypeScript, and a CLI with zero dependencies and no build step.
+
+> Results are heuristic reachability assessments, not geolocation. With a VPN, proxy, or transparent gateway, the result represents the network exit actually used by Node.js.
+
+## Requirements
+
+- Node.js 16 or newer
+
+## Installation
+
+```sh
+npm install ingfw
+```
+
+## Usage
+
+```js
+import { detectGfw, isInGfw } from 'ingfw';
+
+const result = await detectGfw();
+console.log(result.status);      // 'inside' | 'outside' | 'unknown'
+console.log(result.confidence); // 'high' | 'medium' | 'none'
+console.log(result.evidence);
+
+const value = await isInGfw(); // true | false | null
+```
+
+CommonJS:
+
+```js
+const { detectGfw, isInGfw } = require('ingfw');
+```
+
+### Custom probes
+
+```js
+const result = await detectGfw({
+  blocked: ['https://www.google.com/generate_204'],
+  domestic: ['https://www.baidu.com/'],
+  timeout: 1000,
+  cacheTtl: 1000,
+});
+```
+
+- `blocked`: HTTP(S) URLs normally restricted inside the GFW.
+- `domestic`: HTTP(S) URLs expected to be reachable from mainland China.
+- `timeout`: timeout for each target, defaulting to `1000ms`.
+- `cacheTtl`: completed-result cache lifetime, defaulting to `1000ms`; use `0` to disable completed-result caching.
+
+Concurrent calls with identical options share one check. The completed result is reused for one second. Even with caching disabled, concurrent calls are still coalesced.
+
+By default, Google, YouTube, Baidu, and QQ are probed in parallel. Any reachable blocked target means outside; at least one reachable domestic target while every blocked target is unreachable means probably inside; if neither side is reachable, the result is `unknown`. The system time zone is included only as supporting evidence and never determines the result by itself.
+
+## CLI
+
+```sh
+npx ingfw
+npx ingfw --json
+npx ingfw --timeout 1500 --no-cache
+npx ingfw --blocked https://example.com --domestic https://example.cn
+```
+
+Run `npx ingfw --help` for all options. Exit codes are: inside `0`, outside `1`, unknown `2`, and invalid arguments `64`.
+
+## Development
+
+```sh
+npm test
+```
+
+Tests use only Node.js built-ins and a local HTTP server, so they do not depend on the public network. The ESM, CommonJS, CLI, and TypeScript declaration files are maintained directly.
