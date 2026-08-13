@@ -6,6 +6,18 @@ Detect whether the effective Node.js network exit is inside the GFW. Supports ES
 
 > Results are heuristic reachability assessments, not geolocation. With a VPN, proxy, or transparent gateway, the result represents the network exit actually used by Node.js.
 
+## Why this package exists
+
+Many Node.js packages download additional assets during installation, initialization, or updates, such as binaries, models, templates, rule sets, or configuration from GitHub Raw. In mainland China, these overseas resources may time out or be unreachable, causing long installation delays, failures, or partially initialized software.
+
+`incngfw` provides a quick network-exit and service-reachability signal before a download starts, allowing packages to choose a reliable and compliant resource strategy. For example:
+
+- Use the project's official overseas source when outside the GFW or when GitHub Raw is reachable.
+- When the network is probably inside the GFW, use a maintainer-provided and integrity-verified mainland mirror, such as Gitee, mainland object storage, or a compliant CDN.
+- When the result is `unknown`, do not assume the user is inside the GFW. Offer an explicit choice, retry, or use a recoverable conservative path.
+
+This package only reports network signals. It does not automatically change the npm registry, proxy, DNS, or download URL. Callers remain responsible for ensuring that fallback resources are authorized, match the official content, and comply with applicable regional and organizational security policies. It must not be used to bypass access controls or evade network policies.
+
 ## Requirements
 
 - Node.js 16 or newer
@@ -75,6 +87,8 @@ npx incngfw --blocked https://example.com --domestic https://example.cn
 ```
 
 Run `npx incngfw --help` for all options. Exit codes are: inside `0`, outside `1`, unknown `2`, and invalid arguments `64`.
+
+Human-readable mode reports progress on stderr. `--json` suppresses progress output so programs can parse stdout directly. The timeout is an overall deadline measured from request creation and includes DNS, TCP, and TLS connection setup.
 
 ## Development
 

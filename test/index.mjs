@@ -101,7 +101,6 @@ try {
       assert.equal(url, 'https://raw.githubusercontent.com/');
       assert.equal(options.method, 'HEAD');
       const request = new EventEmitter();
-      request.setTimeout = () => request;
       request.end = () => {
         setImmediate(() => callback({ statusCode: 301, resume() {} }));
       };
@@ -124,7 +123,6 @@ try {
     https.request = () => {
       githubRawRequests += 1;
       const request = new EventEmitter();
-      request.setTimeout = () => request;
       request.end = () => setImmediate(() => {
         const error = new Error('unreachable');
         error.code = 'ENOTFOUND';
@@ -163,6 +161,7 @@ try {
   ]);
   assert.equal(cliOutside.code, 1);
   assert.match(cliOutside.stdout, /GFW 外/);
+  assert.match(cliOutside.stderr, /正在检测/);
   const cliUnknown = await runCli([
     '--blocked', unavailable, '--domestic', unavailable, '--timeout', '100', '--no-cache',
   ]);

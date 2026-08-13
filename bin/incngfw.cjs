@@ -82,6 +82,7 @@ async function main() {
   }
 
   const { json, options } = parseArgs(args);
+  if (!json) process.stderr.write('正在检测网络环境，请稍候…\n');
   const result = await detectGfw(options);
   process.stdout.write(json ? `${JSON.stringify(result)}\n` : humanOutput(result));
   return result.status === 'inside' ? 0 : result.status === 'outside' ? 1 : 2;
