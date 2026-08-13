@@ -10,6 +10,7 @@ import * as esm from '../lib/index.js';
 
 const require = createRequire(import.meta.url);
 const cjs = require('../lib/index.cjs');
+const { version } = require('../package.json');
 
 assert.equal(esm.detectGfw, cjs.detectGfw);
 assert.equal(esm.isInGfw, cjs.isInGfw);
@@ -172,7 +173,7 @@ try {
   assert.equal(cliHelp.code, 0);
   assert.match(cliHelp.stdout, /--json/);
   const cliVersion = await runCli(['--version']);
-  assert.equal(cliVersion.stdout.trim(), '0.1.0');
+  assert.equal(cliVersion.stdout.trim(), version);
 } finally {
   await new Promise((resolve) => server.close(resolve));
 }
