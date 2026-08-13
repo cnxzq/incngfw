@@ -19,7 +19,7 @@
     }
   },
   "bin": {
-    "ingfw": "./bin/ingfw.cjs"
+    "ingfw": "bin/ingfw.cjs"
   },
   "files": [
     "bin",
