@@ -89,7 +89,7 @@ try {
 
   async function runCli(args) {
     return new Promise((resolve, reject) => {
-      const child = spawn(process.execPath, ['bin/ingfw.cjs', ...args], {
+      const child = spawn(process.execPath, ['bin/incngfw.cjs', ...args], {
         cwd: new URL('..', import.meta.url),
         windowsHide: true,
       });

@@ -1,4 +1,4 @@
-# ingfw
+# incngfw
 
 [English](./docs/README.en.md) | 简体中文
 
@@ -13,13 +13,13 @@
 ## 安装
 
 ```sh
-npm install ingfw
+npm install incngfw
 ```
 
 ## 使用
 
 ```js
-import { detectGfw, isInGfw } from 'ingfw';
+import { detectGfw, isInGfw } from 'incngfw';
 
 const result = await detectGfw();
 console.log(result.status);     // 'inside' | 'outside' | 'unknown'
@@ -32,7 +32,7 @@ const value = await isInGfw(); // true | false | null
 CommonJS：
 
 ```js
-const { detectGfw, isInGfw } = require('ingfw');
+const { detectGfw, isInGfw } = require('incngfw');
 ```
 
 ### 自定义检测
@@ -58,13 +58,13 @@ const result = await detectGfw({
 ## CLI
 
 ```sh
-npx ingfw
-npx ingfw --json
-npx ingfw --timeout 1500 --no-cache
-npx ingfw --blocked https://example.com --domestic https://example.cn
+npx incngfw
+npx incngfw --json
+npx incngfw --timeout 1500 --no-cache
+npx incngfw --blocked https://example.com --domestic https://example.cn
 ```
 
-执行 `npx ingfw --help` 查看所有参数。退出码为：墙内 `0`、墙外 `1`、未知 `2`、参数错误 `64`。
+执行 `npx incngfw --help` 查看所有参数。退出码为：墙内 `0`、墙外 `1`、未知 `2`、参数错误 `64`。
 
 ## 开发
 

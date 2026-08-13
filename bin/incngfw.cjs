@@ -4,7 +4,7 @@
 const { detectGfw } = require('../lib/index.cjs');
 const { version } = require('../package.json');
 
-const HELP = `用法: ingfw [选项]
+const HELP = `用法: incngfw [选项]
 
 判断 Node.js 当前网络出口是否位于 GFW 内。
 
@@ -90,7 +90,7 @@ async function main() {
 main().then(
   (code) => { process.exitCode = code; },
   (error) => {
-    process.stderr.write(`ingfw: ${error.message}\n`);
+    process.stderr.write(`incngfw: ${error.message}\n`);
     process.exitCode = error.isArgumentError || error instanceof TypeError ? 64 : 2;
   },
 );

@@ -1,4 +1,4 @@
-# ingfw
+# incngfw
 
 English | [简体中文](../README.md)
 
@@ -13,13 +13,13 @@ Detect whether the effective Node.js network exit is inside the GFW. Supports ES
 ## Installation
 
 ```sh
-npm install ingfw
+npm install incngfw
 ```
 
 ## Usage
 
 ```js
-import { detectGfw, isInGfw } from 'ingfw';
+import { detectGfw, isInGfw } from 'incngfw';
 
 const result = await detectGfw();
 console.log(result.status);      // 'inside' | 'outside' | 'unknown'
@@ -32,7 +32,7 @@ const value = await isInGfw(); // true | false | null
 CommonJS:
 
 ```js
-const { detectGfw, isInGfw } = require('ingfw');
+const { detectGfw, isInGfw } = require('incngfw');
 ```
 
 ### Custom probes
@@ -58,13 +58,13 @@ By default, Google, YouTube, Baidu, and QQ are probed in parallel. Any reachable
 ## CLI
 
 ```sh
-npx ingfw
-npx ingfw --json
-npx ingfw --timeout 1500 --no-cache
-npx ingfw --blocked https://example.com --domestic https://example.cn
+npx incngfw
+npx incngfw --json
+npx incngfw --timeout 1500 --no-cache
+npx incngfw --blocked https://example.com --domestic https://example.cn
 ```
 
-Run `npx ingfw --help` for all options. Exit codes are: inside `0`, outside `1`, unknown `2`, and invalid arguments `64`.
+Run `npx incngfw --help` for all options. Exit codes are: inside `0`, outside `1`, unknown `2`, and invalid arguments `64`.
 
 ## Development
 
