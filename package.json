@@ -1,6 +1,6 @@
 {
   "name": "incngfw",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Detect whether the current network environment is inside the GFW.",
   "type": "module",
   "main": "./lib/index.cjs",
