@@ -78,6 +78,8 @@ npx incngfw --blocked https://example.com --domestic https://example.cn
 
 ## 开发
 
+更多用法和生产环境建议参见 [`examples/`](./examples/README.md)。
+
 ```sh
 npm test
 ```

@@ -78,6 +78,8 @@ Run `npx incngfw --help` for all options. Exit codes are: inside `0`, outside `1
 
 ## Development
 
+See [`examples/`](../examples/README.md) for more usage patterns and production recommendations.
+
 ```sh
 npm test
 ```
